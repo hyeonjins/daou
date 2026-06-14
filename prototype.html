@@ -328,6 +328,12 @@
     .owner-tag.service  { background:#DCFCE7;color:#15803D; }
     .n-badge { font-size:11px;font-weight:700;color:var(--high);background:#FEF2F2;padding:2px 8px;border-radius:4px;flex-shrink:0; }
 
+    /* ── 서브 탭 ── */
+    .sub-nav { display:flex; gap:2px; margin-bottom:18px; background:#F1F5F9; border-radius:8px; padding:4px; width:fit-content; }
+    .sub-nav-btn { padding:6px 16px; border-radius:6px; border:none; background:transparent; font-size:12px; font-weight:600; color:var(--muted); cursor:pointer; font-family:inherit; transition:all .15s; white-space:nowrap; }
+    .sub-nav-btn:hover { background:white; color:var(--text); }
+    .sub-nav-btn.active { background:white; color:var(--brand); box-shadow:0 1px 3px rgba(0,0,0,.1); }
+
     .toast { position: fixed; bottom: 24px; right: 24px; background: #0F172A; color: white; padding: 12px 18px; border-radius: 8px; font-size: 13px; box-shadow: 0 8px 24px rgba(0,0,0,.25); opacity: 0; transform: translateY(8px); transition: all .3s; z-index: 999; pointer-events: none; }
     .toast.show { opacity: 1; transform: translateY(0); }
 
@@ -380,25 +386,21 @@
 
 <div class="layout">
   <nav class="sidebar">
-    <div class="sidebar-label">메인</div>
-    <div class="sidebar-item" data-page="dashboard" onclick="showPage('dashboard')"><span class="si">📊</span> 대시보드</div>
-    <div class="sidebar-label">AI 관리</div>
-    <div class="sidebar-item" data-page="registry" onclick="showPage('registry')"><span class="si">📋</span> AI 기능 관리</div>
-    <div class="sidebar-item active" data-page="review" onclick="showPage('review')"><span class="si">🔍</span> 도입 심사 <span class="sidebar-badge">3</span></div>
-    <div class="sidebar-item" data-page="monitor" onclick="showPage('monitor')"><span class="si">📡</span> 운영 모니터링</div>
-    <div class="sidebar-label">컴플라이언스</div>
-    <div class="sidebar-item" data-page="audit" onclick="showPage('audit')"><span class="si">📜</span> 감사 로그</div>
-    <div class="sidebar-item" data-page="compliance" onclick="showPage('compliance')"><span class="si">⚖️</span> 규제 현황</div>
-    <div class="sidebar-item" data-page="checklist" onclick="showPage('checklist')"><span class="si">✅</span> 보안 체크리스트</div>
-    <div class="sidebar-label">설정</div>
-    <div class="sidebar-item" data-page="policy" onclick="showPage('policy')"><span class="si">⚙️</span> 정책 관리</div>
-    <div class="sidebar-item" data-page="roles" onclick="showPage('roles')"><span class="si">👥</span> 권한 관리</div>
+    <div class="sidebar-label">Daou AI Governance</div>
+    <div class="sidebar-item" data-page="registry" onclick="showPage('registry')"><span class="si">📋</span> ① AI 기능 관리</div>
+    <div class="sidebar-item active" data-page="review" onclick="showPage('review')"><span class="si">🔍</span> ② AI 도입 심사 <span class="sidebar-badge">3</span></div>
+    <div class="sidebar-item" data-page="monitor" onclick="showPage('monitor')"><span class="si">📡</span> ③ AI 운영 관리</div>
+    <div class="sidebar-item" data-page="policy" onclick="showPage('policy')"><span class="si">⚙️</span> ④ AI 정책 관리</div>
   </nav>
 
   <main class="main">
 
     <!-- ══════ PAGE: 도입 심사 (기본 화면) ══════ -->
     <div id="page-review" class="page">
+      <div class="sub-nav">
+        <button class="sub-nav-btn active">심사 상세</button>
+        <button class="sub-nav-btn" onclick="showPage('checklist')">보안 체크리스트</button>
+      </div>
       <div class="rv-breadcrumb">
         <span class="rv-bc-link" onclick="showPage('registry')">AI 기능 관리</span>
         <span style="color:#CBD5E1">›</span>
@@ -413,7 +415,6 @@
           </div>
         </div>
         <div class="rv-actions">
-          <button class="btn-ghost" onclick="showPage('checklist')" style="font-size:11px">🔒 보안 체크리스트</button>
           <button class="btn-ghost" id="rejectBtn" onclick="rejectReview()">반려</button>
           <button class="btn-primary" id="approveBtn" onclick="completeApproval()">조건부 승인</button>
         </div>
@@ -676,6 +677,10 @@
 
     <!-- ══════ PAGE: 대시보드 ══════ -->
     <div id="page-dashboard" class="page hidden">
+      <div class="sub-nav">
+        <button class="sub-nav-btn" onclick="showPage('registry')">기능 목록</button>
+        <button class="sub-nav-btn active">전체 현황</button>
+      </div>
       <div class="page-header">
         <div><div class="page-title">대시보드</div><div class="page-meta">제품 AI 거버넌스 현황 · 2026.06.14</div></div>
         <button class="btn-primary">리포트 내보내기</button>
@@ -718,6 +723,10 @@
 
     <!-- ══════ PAGE: AI 기능 관리 ══════ -->
     <div id="page-registry" class="page hidden">
+      <div class="sub-nav">
+        <button class="sub-nav-btn active">기능 목록</button>
+        <button class="sub-nav-btn" onclick="showPage('dashboard')">전체 현황</button>
+      </div>
       <div class="page-header">
         <div><div class="page-title">AI 기능 관리</div><div class="page-meta">제품 AI 기능 목록 · 총 9개</div></div>
         <button class="btn-primary" onclick="openRegModal()">+ 새 기능 등록</button>
@@ -748,7 +757,7 @@
     <!-- ══════ PAGE: 운영 모니터링 ══════ -->
     <div id="page-monitor" class="page hidden">
       <div class="page-header">
-        <div><div class="page-title">운영 모니터링</div><div class="page-meta">운영 중 AI 기능 실시간 현황 · 2026.06.14 09:00</div></div>
+        <div><div class="page-title">AI 운영 관리</div><div class="page-meta">운영 중 AI 기능 실시간 현황 · 2026.06.14 09:00</div></div>
         <button class="btn-primary">알람 설정</button>
       </div>
       <div class="monitor-grid">
@@ -765,6 +774,12 @@
 
     <!-- ══════ PAGE: 감사 로그 ══════ -->
     <div id="page-audit" class="page hidden">
+      <div class="sub-nav">
+        <button class="sub-nav-btn" onclick="showPage('policy')">정책 설정</button>
+        <button class="sub-nav-btn" onclick="showPage('compliance')">규제 현황</button>
+        <button class="sub-nav-btn active">감사 로그</button>
+        <button class="sub-nav-btn" onclick="showPage('roles')">권한 관리</button>
+      </div>
       <div class="page-header">
         <div><div class="page-title">감사 로그</div><div class="page-meta">전체 AI 거버넌스 활동 이력</div></div>
         <button class="btn-primary">PDF 내보내기</button>
@@ -790,6 +805,12 @@
 
     <!-- ══════ PAGE: 규제 현황 ══════ -->
     <div id="page-compliance" class="page hidden">
+      <div class="sub-nav">
+        <button class="sub-nav-btn" onclick="showPage('policy')">정책 설정</button>
+        <button class="sub-nav-btn active">규제 현황</button>
+        <button class="sub-nav-btn" onclick="showPage('audit')">감사 로그</button>
+        <button class="sub-nav-btn" onclick="showPage('roles')">권한 관리</button>
+      </div>
       <div class="page-header">
         <div><div class="page-title">규제 현황</div><div class="page-meta">AI 관련 규제 준수 현황 · 2026.06.14</div></div>
         <button class="btn-primary">규제 대응 리포트</button>
@@ -804,8 +825,14 @@
 
     <!-- ══════ PAGE: 정책 관리 ══════ -->
     <div id="page-policy" class="page hidden">
+      <div class="sub-nav">
+        <button class="sub-nav-btn active">정책 설정</button>
+        <button class="sub-nav-btn" onclick="showPage('compliance')">규제 현황</button>
+        <button class="sub-nav-btn" onclick="showPage('audit')">감사 로그</button>
+        <button class="sub-nav-btn" onclick="showPage('roles')">권한 관리</button>
+      </div>
       <div class="page-header">
-        <div><div class="page-title">정책 관리</div><div class="page-meta">위험 등급 기준 및 승인 정책 설정</div></div>
+        <div><div class="page-title">AI 정책 관리</div><div class="page-meta">위험 등급 기준 및 승인 정책 설정</div></div>
         <button class="btn-primary" onclick="showToast('정책이 저장되었습니다.')">저장</button>
       </div>
       <div class="card">
@@ -830,6 +857,12 @@
 
     <!-- ══════ PAGE: 권한 관리 ══════ -->
     <div id="page-roles" class="page hidden">
+      <div class="sub-nav">
+        <button class="sub-nav-btn" onclick="showPage('policy')">정책 설정</button>
+        <button class="sub-nav-btn" onclick="showPage('compliance')">규제 현황</button>
+        <button class="sub-nav-btn" onclick="showPage('audit')">감사 로그</button>
+        <button class="sub-nav-btn active">권한 관리</button>
+      </div>
       <div class="page-header">
         <div><div class="page-title">권한 관리</div><div class="page-meta">플랫폼 사용자 역할 및 접근 권한</div></div>
         <button class="btn-primary" onclick="showToast('사용자가 추가되었습니다.')">+ 사용자 추가</button>
@@ -849,15 +882,16 @@
 
     <!-- ══════ PAGE: 보안 체크리스트 ══════ -->
     <div id="page-checklist" class="page hidden">
+      <div class="sub-nav">
+        <button class="sub-nav-btn" onclick="showPage('review','047')">심사 상세</button>
+        <button class="sub-nav-btn active">보안 체크리스트</button>
+      </div>
       <div class="page-header">
         <div>
           <div class="page-title">보안 체크리스트</div>
           <div class="page-meta">AI-2026-047 · 사방넷 상품설명 생성 AI · 인공지능(AI) 보안 안내서 기반</div>
         </div>
-        <div style="display:flex;gap:8px">
-          <button class="btn-ghost" onclick="showPage('review','047')" style="font-size:12px">← 심사로 돌아가기</button>
-          <button class="btn-primary" onclick="showToast('체크리스트 PDF 내보내기 준비 중')">내보내기</button>
-        </div>
+        <button class="btn-primary" onclick="showToast('체크리스트 PDF 내보내기 준비 중')">내보내기</button>
       </div>
       <div class="cl-progress-wrap">
         <div style="display:flex;justify-content:space-between;align-items:center">
@@ -1022,6 +1056,12 @@
 
 <script>
   const VALID_PAGES = ['dashboard','registry','review','monitor','audit','compliance','policy','roles','checklist'];
+  const SIDEBAR_MAP = {
+    dashboard:'registry', registry:'registry',
+    review:'review', checklist:'review',
+    monitor:'monitor',
+    policy:'policy', compliance:'policy', audit:'policy', roles:'policy',
+  };
 
   /* ════════════════════════════════
      보안 체크리스트 데이터 & 로직
@@ -1271,7 +1311,8 @@
     document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
     document.getElementById('page-' + id).classList.remove('hidden');
     document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
-    const target = document.querySelector(`[data-page="${id}"]`);
+    const sidebarPage = SIDEBAR_MAP[id] || id;
+    const target = document.querySelector(`[data-page="${sidebarPage}"]`);
     if (target) target.classList.add('active');
     history.replaceState(null, '', '#' + id);
     if (id === 'checklist' && !document.getElementById('cl-container').hasChildNodes()) {
