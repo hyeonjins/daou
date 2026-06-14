@@ -425,10 +425,7 @@
         </div>
         <div class="rv-actions">
           <button class="btn-ghost" id="rejectBtn" onclick="rejectReview()">반려</button>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
-            <button class="btn-primary" id="approveBtn" onclick="completeApproval()" disabled>조건부 승인</button>
-            <span id="approveBtnHint" style="font-size:10px;color:var(--amber)">미완료 통제 4건 해결 후 승인 가능</span>
-          </div>
+          <button class="btn-primary" id="approveBtn" onclick="completeApproval()" disabled>조건부 승인</button>
         </div>
       </div>
 
@@ -1233,8 +1230,6 @@
     document.getElementById('rejectBtn').disabled = false;
     const ab = document.getElementById('approveBtn');
     ab.disabled = true; ab.textContent = '조건부 승인'; ab.style.background = '';
-    const hint = document.getElementById('approveBtnHint');
-    if (hint) { hint.textContent = '미완료 통제 4건 해결 후 승인 가능'; hint.style.display = ''; }
     const kpi = document.getElementById('kpi-ctrl-count');
     kpi.textContent = '4건'; kpi.className = 'summary-kpi-val red';
     if (ctrlCardOriginal) {
@@ -1257,7 +1252,6 @@
     const kpi = document.getElementById('kpi-ctrl-count');
     kpi.textContent = remaining + '건';
     const btn = document.getElementById('approveBtn');
-    const hint = document.getElementById('approveBtnHint');
 
     if (remaining === 0) {
       kpi.className = 'summary-kpi-val green';
@@ -1273,12 +1267,10 @@
       btn.textContent = '최종 운영 전환';
       btn.style.background = '#16A34A';
       btn.disabled = false;
-      if (hint) hint.style.display = 'none';
       showToast('✅  필수 통제 4건 이행 완료 — 최종 운영 전환 가능합니다.');
     } else {
       btn.disabled = true;
       btn.style.background = '';
-      if (hint) hint.textContent = `미완료 통제 ${remaining}건 해결 후 승인 가능`;
     }
   }
 
