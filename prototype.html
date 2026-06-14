@@ -185,6 +185,9 @@
     .impl-badge.planned { background: #F1F5F9; color: var(--muted); }
     .impl-badge.ctrl-toggle { cursor: pointer; }
     .impl-badge.ctrl-toggle:hover { filter: brightness(.93); }
+    .cl-link { font-size:10px;font-weight:500;color:#3B82F6;cursor:pointer;margin-left:4px;opacity:.75; }
+    .cl-link:hover { opacity:1;text-decoration:underline; }
+    .cl-highlight { outline:2px solid #3B82F6;border-radius:6px;transition:outline .3s; }
 
     /* Right: 승인 프로세스 */
     .ap-step { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
@@ -453,6 +456,10 @@
             <div class="summary-kpi-val blue">2/3</div>
             <div class="summary-kpi-label">승인 대기</div>
           </div>
+          <div class="summary-kpi" style="cursor:pointer" onclick="showPage('checklist')" title="보안 체크리스트 보기">
+            <div class="summary-kpi-val" id="kpi-cl-progress" style="color:#16A34A">–/28</div>
+            <div class="summary-kpi-label">보안 체크리스트 ↗</div>
+          </div>
         </div>
       </div>
 
@@ -595,42 +602,42 @@
             </div>
             <div class="ctrl-item">
               <div class="ctrl-item-info">
-                <div class="ctrl-item-name">Human Review <span class="ctrl-req req">필수</span></div>
+                <div class="ctrl-item-name">Human Review <span class="ctrl-req req">필수</span> <span class="cl-link" onclick="goToChecklist('3.4.6')" title="체크리스트 3.4.6 보기">→ 체크리스트</span></div>
                 <div class="ctrl-item-reason">고객 직접 노출</div>
               </div>
               <span class="impl-badge needed ctrl-toggle" onclick="toggleCtrl(this)" title="클릭하여 이행 확인">구현 필요</span>
             </div>
             <div class="ctrl-item">
               <div class="ctrl-item-info">
-                <div class="ctrl-item-name">Audit Log <span class="ctrl-req req">필수</span></div>
+                <div class="ctrl-item-name">Audit Log <span class="ctrl-req req">필수</span> <span class="cl-link" onclick="goToChecklist('5.1.4')" title="체크리스트 5.1.4 보기">→ 체크리스트</span></div>
                 <div class="ctrl-item-reason">생성형 AI 추적성 확보</div>
               </div>
               <span class="impl-badge done">구현 완료</span>
             </div>
             <div class="ctrl-item">
               <div class="ctrl-item-info">
-                <div class="ctrl-item-name">Output Validation <span class="ctrl-req req">필수</span></div>
+                <div class="ctrl-item-name">Output Validation <span class="ctrl-req req">필수</span> <span class="cl-link" onclick="goToChecklist('3.4.1')" title="체크리스트 3.4.1 보기">→ 체크리스트</span></div>
                 <div class="ctrl-item-reason">허위·과장 정보 방지</div>
               </div>
               <span class="impl-badge pending ctrl-toggle" onclick="toggleCtrl(this)" title="클릭하여 이행 확인">검증 대기</span>
             </div>
             <div class="ctrl-item">
               <div class="ctrl-item-info">
-                <div class="ctrl-item-name">Prompt Filtering <span class="ctrl-req req">필수</span></div>
+                <div class="ctrl-item-name">Prompt Filtering <span class="ctrl-req req">필수</span> <span class="cl-link" onclick="goToChecklist('3.4.7')" title="체크리스트 3.4.7 보기">→ 체크리스트</span></div>
                 <div class="ctrl-item-reason">악성 입력 차단</div>
               </div>
               <span class="impl-badge needed ctrl-toggle" onclick="toggleCtrl(this)" title="클릭하여 이행 확인">구현 필요</span>
             </div>
             <div class="ctrl-item">
               <div class="ctrl-item-info">
-                <div class="ctrl-item-name">AI 생성 콘텐츠 고지 <span class="ctrl-req req">필수</span></div>
+                <div class="ctrl-item-name">AI 생성 콘텐츠 고지 <span class="ctrl-req req">필수</span> <span class="cl-link" onclick="goToChecklist('1.1.2')" title="체크리스트 1.1.2 보기">→ 체크리스트</span></div>
                 <div class="ctrl-item-reason">투명성 확보</div>
               </div>
               <span class="impl-badge needed ctrl-toggle" onclick="toggleCtrl(this)" title="클릭하여 이행 확인">구현 필요</span>
             </div>
             <div class="ctrl-item">
               <div class="ctrl-item-info">
-                <div class="ctrl-item-name">오출력 모니터링 <span class="ctrl-req rec">권고</span></div>
+                <div class="ctrl-item-name">오출력 모니터링 <span class="ctrl-req rec">권고</span> <span class="cl-link" onclick="goToChecklist('4.1.2')" title="체크리스트 4.1.2 보기">→ 체크리스트</span></div>
                 <div class="ctrl-item-reason">운영 안정성 확보</div>
               </div>
               <span class="impl-badge planned">예정</span>
@@ -1196,6 +1203,23 @@
     updateClProgress();
   }
 
+  function goToChecklist(itemId) {
+    showPage('checklist');
+    setTimeout(() => {
+      const el = document.getElementById('clitem-' + itemId);
+      if (!el) return;
+      const phaseBody = el.closest('.cl-phase-body');
+      if (phaseBody && !phaseBody.classList.contains('open')) {
+        phaseBody.classList.add('open');
+        const header = phaseBody.previousElementSibling;
+        if (header) header.classList.add('open');
+      }
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.classList.add('cl-highlight');
+      setTimeout(() => el.classList.remove('cl-highlight'), 2000);
+    }, 120);
+  }
+
   function updateClProgress() {
     const ids   = Object.keys(CL_STATUS);
     const total = ids.length;
@@ -1210,6 +1234,11 @@
     document.getElementById('cl-n-cnt').textContent  = nN;
     document.getElementById('cl-na-cnt').textContent = naN;
     document.getElementById('cl-blank-cnt').textContent = blank;
+    const kpiEl = document.getElementById('kpi-cl-progress');
+    if (kpiEl) {
+      kpiEl.textContent = yN + '/' + total;
+      kpiEl.style.color = yN === total ? '#16A34A' : yN >= total * 0.7 ? '#D97706' : '#DC2626';
+    }
   }
 
   let ctrlCardOriginal = null;
