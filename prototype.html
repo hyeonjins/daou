@@ -243,9 +243,11 @@
     .service-tag.purrio    { background: #FCE7F3; color: #9D174D; }
     .service-tag.sabangnet { background: #DBEAFE; color: #1E40AF; }
     .status-tag { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 11px; font-weight: 600; }
-    .status-tag.running { background: #DCFCE7; color: #15803D; }
-    .status-tag.review  { background: #DBEAFE; color: #1D4ED8; }
-    .status-tag.waiting { background: #FEF3C7; color: #92400E; }
+    .status-tag.running  { background: #DCFCE7; color: #15803D; }
+    .status-tag.review   { background: #DBEAFE; color: #1D4ED8; }
+    .status-tag.waiting  { background: #FEF3C7; color: #92400E; }
+    .status-tag.rejected { background: #FEF2F2; color: #DC2626; }
+    .status-tag.approved { background: #DCFCE7; color: #15803D; }
 
     .monitor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 14px; }
     .monitor-card { background: var(--card); border-radius: 10px; border: 1px solid var(--border); padding: 16px 18px; }
@@ -903,12 +905,15 @@
 </div>
 
 <script>
+  const VALID_PAGES = ['dashboard','registry','review','monitor','audit','compliance','policy','roles'];
+
   function showPage(id) {
     document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
     document.getElementById('page-' + id).classList.remove('hidden');
     document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
     const target = document.querySelector(`[data-page="${id}"]`);
     if (target) target.classList.add('active');
+    history.replaceState(null, '', '#' + id);
     if (id === 'dashboard') {
       setTimeout(() => {
         document.querySelectorAll('#page-dashboard .service-bar-fill').forEach(bar => {
@@ -916,6 +921,17 @@
         });
       }, 100);
     }
+  }
+
+  function syncRegistryRow(statusClass, statusText) {
+    document.querySelectorAll('#registry-tbody tr').forEach(row => {
+      const cell = row.querySelector('td');
+      if (cell && cell.textContent.trim() === 'AI-2026-047') {
+        row.dataset.status = statusText;
+        const tag = row.querySelector('.status-tag');
+        if (tag) { tag.className = `status-tag ${statusClass}`; tag.textContent = statusText; }
+      }
+    });
   }
 
   function rejectReview() {
@@ -939,6 +955,7 @@
       const el = document.getElementById(id);
       if (el) el.disabled = true;
     });
+    syncRegistryRow('rejected', '반려');
     showToast('✕  AI-2026-047 심사 반려 — 보완 후 재신청이 필요합니다.');
   }
 
@@ -962,6 +979,7 @@
       if (el) el.disabled = true;
     });
     document.getElementById('monitorLink').classList.add('visible');
+    syncRegistryRow('approved', '배포 가능');
     showToast('✅  AI-2026-047 최종 승인 완료 — 배포 가능 상태로 전환되었습니다.');
   }
 
@@ -1047,6 +1065,10 @@
     t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 3500);
   }
+
+  // 새로고침 시 마지막 페이지 복원
+  const initHash = location.hash.slice(1);
+  showPage(VALID_PAGES.includes(initHash) ? initHash : 'review');
 </script>
 </body>
 </html>
