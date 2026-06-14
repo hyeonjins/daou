@@ -285,6 +285,32 @@
 
     .toast { position: fixed; bottom: 24px; right: 24px; background: #0F172A; color: white; padding: 12px 18px; border-radius: 8px; font-size: 13px; box-shadow: 0 8px 24px rgba(0,0,0,.25); opacity: 0; transform: translateY(8px); transition: all .3s; z-index: 999; pointer-events: none; }
     .toast.show { opacity: 1; transform: translateY(0); }
+
+    /* ── 등록 모달 ── */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200; display: flex; align-items: center; justify-content: center; }
+    .modal-overlay.hidden { display: none; }
+    .modal { background: white; border-radius: 12px; width: 540px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,.25); }
+    .modal-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .modal-title { font-size: 16px; font-weight: 700; }
+    .modal-subtitle { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .modal-close { font-size: 20px; color: var(--muted); cursor: pointer; line-height: 1; padding: 0 4px; }
+    .modal-close:hover { color: var(--text); }
+    .modal-body { padding: 20px 24px; }
+    .form-section { font-size: 10px; font-weight: 800; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; margin-bottom: 12px; margin-top: 18px; }
+    .form-section:first-child { margin-top: 0; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .form-row.full { grid-template-columns: 1fr; }
+    .form-field label { display: block; font-size: 11px; font-weight: 600; color: var(--muted); margin-bottom: 5px; }
+    .form-field input, .form-field select, .form-field textarea {
+      width: 100%; border: 1px solid var(--border); border-radius: 6px;
+      padding: 8px 10px; font-size: 13px; font-family: inherit; color: var(--text);
+      transition: border-color .15s;
+    }
+    .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
+      outline: none; border-color: var(--brand);
+    }
+    .form-field textarea { resize: vertical; min-height: 60px; }
+    .modal-footer { padding: 14px 24px 20px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
     @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
     .pulse { animation: pulse 1.8s infinite; }
     ::-webkit-scrollbar { width: 5px; }
@@ -643,7 +669,7 @@
     <div id="page-registry" class="page hidden">
       <div class="page-header">
         <div><div class="page-title">AI 기능 관리</div><div class="page-meta">전사 등록 AI 기능 목록 · 총 9개</div></div>
-        <button class="btn-primary" onclick="showPage('review')">+ 새 기능 등록</button>
+        <button class="btn-primary" onclick="openRegModal()">+ 새 기능 등록</button>
       </div>
       <div class="card">
         <div class="filter-bar">
@@ -775,6 +801,107 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- ══════ 새 AI 기능 등록 모달 ══════ -->
+<div class="modal-overlay hidden" id="regModal" onclick="closeRegModalOutside(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">새 AI 기능 등록</div>
+        <div class="modal-subtitle">등록 후 자동으로 도입 심사가 시작됩니다</div>
+      </div>
+      <span class="modal-close" onclick="closeRegModal()">✕</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-section">기본 정보</div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>서비스 *</label>
+          <select id="reg-service">
+            <option value="">선택하세요</option>
+            <option>다우오피스</option>
+            <option>사방넷</option>
+            <option>뿌리오</option>
+            <option>다우오피스HR</option>
+            <option>애드콘 / 애드웰</option>
+            <option>다우IDC</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>AI 기능명 *</label>
+          <input type="text" id="reg-name" placeholder="예: 채용공고 생성 AI">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-field">
+          <label>도입 목적</label>
+          <textarea id="reg-purpose" placeholder="AI 기능을 도입하려는 이유와 기대 효과를 입력하세요"></textarea>
+        </div>
+      </div>
+
+      <div class="form-section">AI 유형 및 모델</div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>AI 유형 *</label>
+          <select id="reg-type">
+            <option value="">선택하세요</option>
+            <option>생성형 AI</option>
+            <option>Agent</option>
+            <option>보조 (분류/추천)</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>사용 모델 *</label>
+          <select id="reg-model">
+            <option value="">선택하세요</option>
+            <option>GPT-4o</option>
+            <option>GPT-4o mini</option>
+            <option>Claude 3.5 Sonnet</option>
+            <option>Claude 3.5 Haiku</option>
+            <option>Gemini 1.5 Pro</option>
+            <option>자체 개발 모델</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>최종 사용자</label>
+          <select id="reg-user">
+            <option>외부 고객</option>
+            <option>내부 임직원</option>
+            <option>외부 고객 + 내부 임직원</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>신청자</label>
+          <input type="text" id="reg-requester" placeholder="이름 · 직책">
+        </div>
+      </div>
+
+      <div class="form-section">데이터 사용 정보</div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>개인정보 포함 여부</label>
+          <select id="reg-pii">
+            <option>없음</option>
+            <option>있음</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>외부 API 전송 여부</label>
+          <select id="reg-external">
+            <option>있음 (외부 LLM API)</option>
+            <option>없음 (내부 처리)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeRegModal()">취소</button>
+      <button class="btn-primary" onclick="submitRegistration()">등록 및 심사 시작</button>
+    </div>
+  </div>
+</div>
+
 <script>
   function showPage(id) {
     document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
@@ -824,6 +951,70 @@
                     (!status  || row.dataset.status  === status);
       row.style.display = match ? '' : 'none';
     });
+  }
+
+  function openRegModal() {
+    document.getElementById('regModal').classList.remove('hidden');
+  }
+  function closeRegModal() {
+    document.getElementById('regModal').classList.add('hidden');
+  }
+  function closeRegModalOutside(e) {
+    if (e.target === document.getElementById('regModal')) closeRegModal();
+  }
+
+  let regIdCounter = 50;
+  function submitRegistration() {
+    const service  = document.getElementById('reg-service').value;
+    const name     = document.getElementById('reg-name').value.trim();
+    const type     = document.getElementById('reg-type').value;
+    const model    = document.getElementById('reg-model').value;
+    const pii      = document.getElementById('reg-pii').value;
+    const requester = document.getElementById('reg-requester').value.trim() || '—';
+
+    if (!service || !name || !type || !model) {
+      showToast('⚠️  필수 항목(서비스, 기능명, AI 유형, 모델)을 모두 입력해 주세요.');
+      return;
+    }
+
+    const riskMap  = { '생성형 AI': 'Limited Risk', 'Agent': 'High Risk', '보조 (분류/추천)': 'Minimal Risk' };
+    const risk     = riskMap[type] || 'Limited Risk';
+    const chipClass = risk === 'High Risk' ? 'HIGH' : risk === 'Limited Risk' ? 'LIMITED' : 'MINIMAL';
+    const svcClass  = service === '다우오피스' || service === '다우오피스HR' ? 'daouoffice'
+                    : service === '사방넷' ? 'sabangnet'
+                    : service === '뿌리오' ? 'purrio' : 'sabangnet';
+    const typeTag  = type === 'Agent' ? 'amber' : type === '생성형 AI' ? 'amber' : 'green';
+    const typeLabel = type === '보조 (분류/추천)' ? '보조' : type;
+    const piiRisk  = pii === '있음' ? ' <span style="color:var(--high);font-size:10px">⚠ 개인정보</span>' : '';
+    const newId    = `AI-2026-0${regIdCounter++}`;
+
+    const tbody = document.getElementById('registry-tbody');
+    const tr = document.createElement('tr');
+    tr.className = 'clickable';
+    tr.dataset.service = service;
+    tr.dataset.risk    = risk;
+    tr.dataset.status  = '심사 대기';
+    tr.onclick = () => showPage('review');
+    tr.innerHTML = `
+      <td style="color:var(--muted);font-size:11px">${newId}</td>
+      <td><span class="service-tag ${svcClass}">${service}</span></td>
+      <td style="font-weight:600">${name}${piiRisk}</td>
+      <td><span class="tag ${typeTag}">${typeLabel}</span></td>
+      <td>${model}</td>
+      <td><span class="risk-chip ${chipClass}">${risk}</span></td>
+      <td><span class="status-tag waiting">심사 대기</span></td>
+      <td>${requester}</td>`;
+    tbody.appendChild(tr);
+
+    closeRegModal();
+    showPage('registry');
+
+    ['reg-service','reg-name','reg-purpose','reg-type','reg-model','reg-requester'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+
+    showToast(`✅  ${newId} 등록 완료 — 도입 심사 대기 중입니다.`);
   }
 
   function showToast(msg) {
