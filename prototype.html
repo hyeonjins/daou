@@ -1403,6 +1403,76 @@
           </select>
         </div>
       </div>
+
+      <div class="form-section">영향평가 질문 (NIST AI RMF)</div>
+      <div class="form-row full">
+        <div class="form-field">
+          <label>AI 출력이 최종 고객·소비자에게 직접 노출되는가?</label>
+          <select id="reg-q-user" onchange="updateRiskPreview()">
+            <option value="">선택하세요</option>
+            <option value="Y">예</option>
+            <option value="N">아니오 (내부 전용)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-field">
+          <label>이 기능이 중단되면 핵심 비즈니스 업무에 지장이 있는가?</label>
+          <select id="reg-q-biz" onchange="updateRiskPreview()">
+            <option value="">선택하세요</option>
+            <option value="Y">예 (핵심 기능)</option>
+            <option value="N">아니오 (보조 기능)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-field">
+          <label>잘못된 AI 출력이 회사·브랜드 신뢰에 영향을 줄 수 있는가?</label>
+          <select id="reg-q-rep" onchange="updateRiskPreview()">
+            <option value="">선택하세요</option>
+            <option value="Y">예</option>
+            <option value="N">아니오</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-section">위험 분류 질문 (EU AI Act)</div>
+      <div class="form-row full">
+        <div class="form-field">
+          <label>채용·신용평가·의료·법집행 등 Annex III 고위험 영역에 해당하는가?</label>
+          <select id="reg-q-annex" onchange="updateRiskPreview()">
+            <option value="">선택하세요</option>
+            <option value="Y">예 (고위험 영역)</option>
+            <option value="N">아니오</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-field">
+          <label>사람의 검토(Human Review) 없이 AI가 자율적으로 의사결정·실행하는가?</label>
+          <select id="reg-q-auto" onchange="updateRiskPreview()">
+            <option value="">선택하세요</option>
+            <option value="Y">예 (자동 실행)</option>
+            <option value="N">아니오 (Human Review 있음)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 영향평가 + 위험분류 미리보기 -->
+      <div id="risk-preview" class="hidden" style="margin:8px 0 4px;padding:14px 16px;background:#F8FAFC;border:1px solid var(--border);border-radius:8px">
+        <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px">⚡ 자동 판정 결과</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:8px">영향평가 (NIST AI RMF)</div>
+            <div id="rp-impact" style="display:flex;flex-direction:column;gap:4px"></div>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:8px">위험등급 (EU AI Act)</div>
+            <div id="rp-chip" style="margin-bottom:8px"></div>
+            <div id="rp-reasons" style="font-size:11px;color:var(--muted);line-height:1.8"></div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn-ghost" onclick="closeRegModal()">취소</button>
@@ -1826,42 +1896,56 @@
   }
 
   function updateRiskPreview() {
-    const type     = document.getElementById('reg-type').value;
-    const user     = document.getElementById('reg-user').value;
-    const external = document.getElementById('reg-external').value;
-    const pii      = document.getElementById('reg-pii').value;
-    const preview  = document.getElementById('risk-preview');
+    const type    = document.getElementById('reg-type').value;
+    const user    = document.getElementById('reg-user').value;
+    const pii     = document.getElementById('reg-pii').value;
+    const external= document.getElementById('reg-external').value;
+    const qUser   = document.getElementById('reg-q-user').value;
+    const qBiz    = document.getElementById('reg-q-biz').value;
+    const qRep    = document.getElementById('reg-q-rep').value;
+    const qAnnex  = document.getElementById('reg-q-annex').value;
+    const qAuto   = document.getElementById('reg-q-auto').value;
+    const preview = document.getElementById('risk-preview');
 
     if (!type) { preview.classList.add('hidden'); return; }
     preview.classList.remove('hidden');
 
-    let risk, chipClass, reasons = [];
+    // ── 영향평가 (NIST AI RMF) ──
+    const userImp = qUser === 'Y' ? 'HIGH' : qUser === 'N' ? 'LOW' : (user.includes('고객사') ? 'MEDIUM' : 'LOW');
+    const bizImp  = qBiz  === 'Y' ? 'HIGH' : qBiz  === 'N' ? 'MEDIUM' : 'MEDIUM';
+    const dataImp = pii   === '있음' ? 'HIGH' : 'LOW';
+    const repImp  = qRep  === 'Y' ? 'MEDIUM' : qRep === 'N' ? 'LOW' : 'LOW';
+    const impColor = { HIGH:'#DC2626', MEDIUM:'#D97706', LOW:'#16A34A' };
+    const impLabel = { HIGH:'HIGH', MEDIUM:'MEDIUM', LOW:'LOW' };
+    document.getElementById('rp-impact').innerHTML = [
+      ['User Impact', userImp],
+      ['Business Impact', bizImp],
+      ['Data Impact', dataImp],
+      ['Reputation Impact', repImp],
+    ].map(([dim, lvl]) => `
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;padding:3px 0">
+        <span style="color:var(--muted)">${dim}</span>
+        <span style="font-weight:700;color:${impColor[lvl]}">${impLabel[lvl]}</span>
+      </div>`).join('');
 
-    if (type === 'Agent') {
+    // ── 위험분류 (EU AI Act) ──
+    let risk, chipClass, reasons = [];
+    if (qAnnex === 'Y' || qAuto === 'Y' || type === 'Agent') {
       risk = 'High Risk'; chipClass = 'HIGH';
-      reasons = ['Agent 유형 — 자율적 판단 및 액션 수행', '외부 시스템 연동 가능성', '오작동 시 영향 범위 넓음'];
-    } else if (type === '생성형 AI') {
-      const isExternal = !user || user.includes('고객사');
+      if (qAnnex === 'Y') reasons.push('Annex III 고위험 영역 해당');
+      if (qAuto  === 'Y') reasons.push('자율적 의사결정 — Human Review 없음');
+      if (type === 'Agent') reasons.push('Agent 유형 — 자율 판단·실행');
+    } else if (qUser === 'Y' || (type === '생성형 AI' && user.includes('고객사'))) {
       risk = 'Limited Risk'; chipClass = 'LIMITED';
-      reasons = ['생성형 AI — AI 콘텐츠 고지 의무 적용'];
-      if (isExternal) reasons.push('고객사 사용자에게 결과 직접 노출');
-      else { risk = 'Minimal Risk'; chipClass = 'MINIMAL'; reasons = ['내부 임직원 대상 생성형 AI 보조 기능']; }
+      reasons.push('AI 생성 콘텐츠 고객 노출 — 투명성 의무 적용');
+      if (type === '생성형 AI') reasons.push('생성형 AI — EU AI Act 12조 적용');
     } else {
       risk = 'Minimal Risk'; chipClass = 'MINIMAL';
-      reasons = ['분류·추천 보조 기능 — 자동 의사결정 아님'];
-      if (user && user.includes('고객사')) {
-        risk = 'Limited Risk'; chipClass = 'LIMITED';
-        reasons.push('고객사 사용자 대상 — 결과 영향도 검토 필요');
-      }
+      reasons.push('내부 보조 기능 — 규제 의무 최소');
+      if (qUser === 'N') reasons.push('고객 직접 노출 없음');
     }
-
-    if (pii === '있음') reasons.push('⚠ 개인정보 포함 — 개인정보보호법 검토 필수');
+    if (pii     === '있음')              reasons.push('⚠ 개인정보 포함 — 개인정보보호법 검토 필수');
     if (external === '있음 (외부 LLM API)') reasons.push('⚠ 외부 LLM API 전송 — 보안·계약 검토 필요');
-
-    const bgMap  = { HIGH: '#FEF2F2', LIMITED: '#FFFBEB', MINIMAL: '#F0FDF4' };
-    const brdMap = { HIGH: '#FCA5A5', LIMITED: '#FCD34D', MINIMAL: '#86EFAC' };
-    preview.style.background   = bgMap[chipClass];
-    preview.style.borderColor  = brdMap[chipClass];
 
     document.getElementById('rp-chip').innerHTML =
       `<span class="risk-chip ${chipClass}" style="font-size:13px;padding:4px 12px">${risk}</span>`;
@@ -1903,8 +1987,9 @@
   function closeRegModal() {
     document.getElementById('regModal').classList.add('hidden');
     document.getElementById('risk-preview').classList.add('hidden');
-    document.getElementById('reg-type').value = '';
-    document.getElementById('reg-user').value = '';
+    ['reg-type','reg-user','reg-q-user','reg-q-biz','reg-q-rep','reg-q-annex','reg-q-auto'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
   }
   function closeRegModalOutside(e) {
     if (e.target === document.getElementById('regModal')) closeRegModal();
