@@ -178,6 +178,8 @@
     .impl-badge.needed  { background: #FEF2F2; color: var(--high); }
     .impl-badge.pending { background: #DBEAFE; color: #1D4ED8; }
     .impl-badge.planned { background: #F1F5F9; color: var(--muted); }
+    .impl-badge.ctrl-toggle { cursor: pointer; }
+    .impl-badge.ctrl-toggle:hover { filter: brightness(.93); }
 
     /* Right: 승인 프로세스 */
     .ap-step { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
@@ -271,6 +273,7 @@
     .audit-action.approve  { background: #DCFCE7; color: #15803D; }
     .audit-action.register { background: #DBEAFE; color: #1E40AF; }
     .audit-action.review   { background: #FEF3C7; color: #92400E; }
+    .audit-action.reject   { background: #FEF2F2; color: #DC2626; }
 
     .compliance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .comp-card { background: var(--card); border-radius: 10px; border: 1px solid var(--border); padding: 18px; }
@@ -284,6 +287,46 @@
     .comp-status.ok   { font-size: 11px; font-weight: 600; color: var(--low); }
     .comp-status.warn { font-size: 11px; font-weight: 600; color: var(--amber); }
     .comp-status.na   { font-size: 11px; font-weight: 600; color: var(--muted); }
+
+    /* ── 보안 체크리스트 ── */
+    .cl-progress-wrap { background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:14px; }
+    .cl-prog-bar-bg { height:8px;background:#E2E8F0;border-radius:4px;overflow:hidden;margin:8px 0; }
+    .cl-prog-bar-fill { height:100%;border-radius:4px;background:var(--brand);transition:width .5s; }
+    .cl-stats-row { display:flex;gap:20px;font-size:12px;margin-top:8px; }
+    .cl-stat-item { display:flex;align-items:center;gap:5px; }
+    .cl-stat-dot { width:8px;height:8px;border-radius:50%;flex-shrink:0; }
+    .cl-phase { margin-bottom:10px; }
+    .cl-phase-header { display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:10px;cursor:pointer;user-select:none;transition:all .15s; }
+    .cl-phase-header:hover { border-color:#BFDBFE;background:#F8FBFF; }
+    .cl-phase-header.open { border-radius:10px 10px 0 0;border-bottom-color:var(--border); }
+    .cl-phase-icon { font-size:16px; }
+    .cl-phase-title { font-size:13px;font-weight:700;flex:1; }
+    .cl-phase-stats { font-size:12px;color:var(--muted); }
+    .cl-phase-chevron { font-size:11px;color:var(--muted);transition:transform .2s; }
+    .cl-phase-header.open .cl-phase-chevron { transform:rotate(180deg); }
+    .cl-phase-body { background:var(--card);border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;padding:0 16px 10px;display:none; }
+    .cl-phase-body.open { display:block; }
+    .cl-group-title { font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;padding:12px 0 6px;border-bottom:1px solid var(--border);margin-bottom:2px; }
+    .cl-item { display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #F1F5F9; }
+    .cl-item:last-child { border-bottom:none; }
+    .cl-item-id { font-size:10px;font-weight:700;color:var(--muted);background:#F1F5F9;padding:2px 6px;border-radius:4px;flex-shrink:0;width:42px;text-align:center; }
+    .cl-item-text { font-size:12px;flex:1;line-height:1.5;color:var(--text); }
+    .cl-item-owner { flex-shrink:0; }
+    .cl-item-btns { display:flex;gap:3px;flex-shrink:0; }
+    .cl-btn { border:1px solid var(--border);background:white;padding:3px 9px;border-radius:4px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;color:var(--muted);transition:all .15s; }
+    .cl-btn:hover { border-color:#94A3B8;color:var(--text); }
+    .cl-btn.active-y { background:#DCFCE7;border-color:#86EFAC;color:#15803D; }
+    .cl-btn.active-n { background:#FEF2F2;border-color:#FCA5A5;color:var(--high); }
+    .cl-btn.active-na { background:#F1F5F9;border-color:#CBD5E1;color:var(--muted); }
+    .cl-item.st-y { background:#FAFFFE; }
+    .cl-item.st-n { background:#FFFAFA; }
+    .cl-item.st-na { background:#FAFAFA; }
+    .owner-tag { font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;white-space:nowrap; }
+    .owner-tag.ax       { background:#DBEAFE;color:#1E40AF; }
+    .owner-tag.security { background:#EDE9FE;color:#5B21B6; }
+    .owner-tag.legal    { background:#FEF3C7;color:#92400E; }
+    .owner-tag.service  { background:#DCFCE7;color:#15803D; }
+    .n-badge { font-size:11px;font-weight:700;color:var(--high);background:#FEF2F2;padding:2px 8px;border-radius:4px;flex-shrink:0; }
 
     .toast { position: fixed; bottom: 24px; right: 24px; background: #0F172A; color: white; padding: 12px 18px; border-radius: 8px; font-size: 13px; box-shadow: 0 8px 24px rgba(0,0,0,.25); opacity: 0; transform: translateY(8px); transition: all .3s; z-index: 999; pointer-events: none; }
     .toast.show { opacity: 1; transform: translateY(0); }
@@ -346,6 +389,7 @@
     <div class="sidebar-label">컴플라이언스</div>
     <div class="sidebar-item" data-page="audit" onclick="showPage('audit')"><span class="si">📜</span> 감사 로그</div>
     <div class="sidebar-item" data-page="compliance" onclick="showPage('compliance')"><span class="si">⚖️</span> 규제 현황</div>
+    <div class="sidebar-item" data-page="checklist" onclick="showPage('checklist')"><span class="si">✅</span> 보안 체크리스트</div>
     <div class="sidebar-label">설정</div>
     <div class="sidebar-item" data-page="policy" onclick="showPage('policy')"><span class="si">⚙️</span> 정책 관리</div>
     <div class="sidebar-item" data-page="roles" onclick="showPage('roles')"><span class="si">👥</span> 권한 관리</div>
@@ -369,8 +413,9 @@
           </div>
         </div>
         <div class="rv-actions">
+          <button class="btn-ghost" onclick="showPage('checklist')" style="font-size:11px">🔒 보안 체크리스트</button>
           <button class="btn-ghost" id="rejectBtn" onclick="rejectReview()">반려</button>
-          <button class="btn-primary" id="approveBtn" onclick="completeApproval()">최종 승인</button>
+          <button class="btn-primary" id="approveBtn" onclick="completeApproval()">조건부 승인</button>
         </div>
       </div>
 
@@ -387,7 +432,7 @@
             <div class="summary-kpi-label">위험등급</div>
           </div>
           <div class="summary-kpi">
-            <div class="summary-kpi-val red">4건</div>
+            <div class="summary-kpi-val red" id="kpi-ctrl-count">4건</div>
             <div class="summary-kpi-label">미완료 통제</div>
           </div>
           <div class="summary-kpi">
@@ -396,7 +441,7 @@
           </div>
           <div class="summary-kpi">
             <div class="summary-kpi-val blue">2/3</div>
-            <div class="summary-kpi-label">승인 완료</div>
+            <div class="summary-kpi-label">승인 대기</div>
           </div>
         </div>
       </div>
@@ -414,7 +459,7 @@
             <div class="info-row"><div class="info-label">기능명</div><div class="info-value" style="font-weight:700">상품설명 생성 AI</div></div>
             <div class="info-row"><div class="info-label">목적</div><div class="info-value">상품 등록 업무 자동화</div></div>
             <div class="info-row"><div class="info-label">AI 유형</div><div class="info-value"><span class="tag amber">생성형 AI</span></div></div>
-            <div class="info-row"><div class="info-label">사용자</div><div class="info-value"><span class="tag purple">외부 고객</span></div></div>
+            <div class="info-row"><div class="info-label">사용자</div><div class="info-value"><span class="tag purple">고객사 판매자</span></div></div>
             <div class="divider"></div>
             <div class="info-row"><div class="info-label">모델</div><div class="info-value"><span class="tag blue">GPT-4o</span></div></div>
             <div class="info-row"><div class="info-label">출력</div><div class="info-value">상품 설명 초안<br><span style="font-size:10px;color:var(--muted)">→ 판매자 검토 후 등록</span></div></div>
@@ -490,7 +535,7 @@
             </div>
             <div class="risk-basis-title">판단 근거</div>
             <div class="risk-basis-item"><div class="risk-basis-dot"></div>생성형 AI 기반 기능</div>
-            <div class="risk-basis-item"><div class="risk-basis-dot"></div>생성 결과가 소비자에게 노출됨</div>
+            <div class="risk-basis-item"><div class="risk-basis-dot"></div>생성 결과가 고객사 업무 및 최종 소비자 노출 정보에 영향</div>
             <div class="risk-basis-item"><div class="risk-basis-dot"></div>개인정보 미사용</div>
             <div class="risk-basis-item"><div class="risk-basis-dot"></div>Human Review 단계 존재</div>
             <div class="risk-basis-item"><div class="risk-basis-dot"></div>자동 의사결정 기능 아님</div>
@@ -522,6 +567,10 @@
               <div class="reg-badge review">REVIEW</div>
               <div><div class="reg-name">소비자 보호</div><div class="reg-desc">허위·과장 방지 장치 필요</div></div>
             </div>
+            <div class="reg-list-item">
+              <div class="reg-badge review">REVIEW</div>
+              <div><div class="reg-name">법무 검토</div><div class="reg-desc">광고·소비자보호·저작권 검토 필요</div></div>
+            </div>
           </div>
         </div>
 
@@ -529,7 +578,7 @@
         <div class="rv-col">
           <div class="col-label">③ 무엇을 해야 배포 가능한가</div>
 
-          <div class="card ctrl-hero">
+          <div class="card ctrl-hero" id="ctrl-hero-card">
             <div class="card-head">통제 항목 자동 생성</div>
             <div class="ctrl-hero-banner">
               ⚡ Limited Risk + 규제 검토 결과에 따라 자동 생성된 배포 전 필수 항목
@@ -539,7 +588,7 @@
                 <div class="ctrl-item-name">Human Review <span class="ctrl-req req">필수</span></div>
                 <div class="ctrl-item-reason">고객 직접 노출</div>
               </div>
-              <span class="impl-badge needed">구현 필요</span>
+              <span class="impl-badge needed ctrl-toggle" onclick="toggleCtrl(this)" title="클릭하여 이행 확인">구현 필요</span>
             </div>
             <div class="ctrl-item">
               <div class="ctrl-item-info">
@@ -553,21 +602,21 @@
                 <div class="ctrl-item-name">Output Validation <span class="ctrl-req req">필수</span></div>
                 <div class="ctrl-item-reason">허위·과장 정보 방지</div>
               </div>
-              <span class="impl-badge pending">검증 대기</span>
+              <span class="impl-badge pending ctrl-toggle" onclick="toggleCtrl(this)" title="클릭하여 이행 확인">검증 대기</span>
             </div>
             <div class="ctrl-item">
               <div class="ctrl-item-info">
                 <div class="ctrl-item-name">Prompt Filtering <span class="ctrl-req req">필수</span></div>
                 <div class="ctrl-item-reason">악성 입력 차단</div>
               </div>
-              <span class="impl-badge needed">구현 필요</span>
+              <span class="impl-badge needed ctrl-toggle" onclick="toggleCtrl(this)" title="클릭하여 이행 확인">구현 필요</span>
             </div>
             <div class="ctrl-item">
               <div class="ctrl-item-info">
                 <div class="ctrl-item-name">AI 생성 콘텐츠 고지 <span class="ctrl-req req">필수</span></div>
                 <div class="ctrl-item-reason">투명성 확보</div>
               </div>
-              <span class="impl-badge needed">구현 필요</span>
+              <span class="impl-badge needed ctrl-toggle" onclick="toggleCtrl(this)" title="클릭하여 이행 확인">구현 필요</span>
             </div>
             <div class="ctrl-item">
               <div class="ctrl-item-info">
@@ -595,9 +644,9 @@
             <div class="ap-step">
               <div class="ap-circle l2">2선</div>
               <div class="ap-info">
-                <div class="ap-line-tag">보안·리스크</div>
+                <div class="ap-line-tag">보안·법무</div>
                 <div class="ap-name">최보안 · 정보보안팀</div>
-                <div class="ap-role">데이터·보안 검토</div>
+                <div class="ap-role">보안·개인정보·규제 검토</div>
               </div>
               <div class="ap-result">
                 <div class="ap-result-text pass">✓ 조건부</div>
@@ -608,7 +657,7 @@
               <div class="ap-circle l3">3선</div>
               <div class="ap-info">
                 <div class="ap-line-tag">AI 거버넌스 (독립)</div>
-                <div class="ap-name">AI 거버넌스위원회</div>
+                <div class="ap-name">AX팀 / AI 거버넌스 조직</div>
                 <div class="ap-role">최종 위험·통제 검토</div>
               </div>
               <div class="ap-result" id="finalApprovalStatus">
@@ -616,7 +665,7 @@
               </div>
             </div>
             <div class="monitor-link" id="monitorLink">
-              📡 <span>승인 완료 — <span style="cursor:pointer;text-decoration:underline" onclick="showPage('monitor')">운영 모니터링</span>에서 확인</span>
+              📡 <span>조건부 승인 — 미완료 통제 이행 후 <span style="cursor:pointer;text-decoration:underline" onclick="showPage('monitor')">운영 모니터링</span>에서 전환</span>
             </div>
           </div>
         </div>
@@ -628,7 +677,7 @@
     <!-- ══════ PAGE: 대시보드 ══════ -->
     <div id="page-dashboard" class="page hidden">
       <div class="page-header">
-        <div><div class="page-title">대시보드</div><div class="page-meta">전사 AI 거버넌스 현황 · 2026.06.14</div></div>
+        <div><div class="page-title">대시보드</div><div class="page-meta">제품 AI 거버넌스 현황 · 2026.06.14</div></div>
         <button class="btn-primary">리포트 내보내기</button>
       </div>
       <div class="stat-grid">
@@ -670,7 +719,7 @@
     <!-- ══════ PAGE: AI 기능 관리 ══════ -->
     <div id="page-registry" class="page hidden">
       <div class="page-header">
-        <div><div class="page-title">AI 기능 관리</div><div class="page-meta">전사 등록 AI 기능 목록 · 총 9개</div></div>
+        <div><div class="page-title">AI 기능 관리</div><div class="page-meta">제품 AI 기능 목록 · 총 9개</div></div>
         <button class="btn-primary" onclick="openRegModal()">+ 새 기능 등록</button>
       </div>
       <div class="card">
@@ -683,7 +732,7 @@
         <table class="reg-table">
           <thead><tr><th>ID</th><th>서비스</th><th>AI 기능명</th><th>유형</th><th>모델</th><th>위험등급</th><th>상태</th><th>담당자</th></tr></thead>
           <tbody id="registry-tbody">
-            <tr class="clickable" onclick="showPage('monitor')" data-service="다우오피스" data-risk="High Risk" data-status="운영 중"><td style="color:var(--muted);font-size:11px">AI-2026-041</td><td><span class="service-tag daouoffice">다우오피스</span></td><td style="font-weight:600">사내 검색 Agent</td><td><span class="tag amber">Agent</span></td><td>GPT-4o</td><td><span class="risk-chip HIGH">High Risk</span></td><td><span class="status-tag running">운영 중</span></td><td>김철수</td></tr>
+            <tr class="clickable" onclick="showPage('monitor')" data-service="다우오피스" data-risk="High Risk" data-status="운영 중"><td style="color:var(--muted);font-size:11px">AI-2026-041</td><td><span class="service-tag daouoffice">다우오피스</span></td><td style="font-weight:600">문서 검색 AI</td><td><span class="tag amber">Agent</span></td><td>GPT-4o</td><td><span class="risk-chip HIGH">High Risk</span></td><td><span class="status-tag running">운영 중</span></td><td>김철수</td></tr>
             <tr class="clickable" onclick="showPage('monitor')" data-service="다우오피스" data-risk="Minimal Risk" data-status="운영 중"><td style="color:var(--muted);font-size:11px">AI-2026-042</td><td><span class="service-tag daouoffice">다우오피스</span></td><td style="font-weight:600">회의록 요약</td><td><span class="tag green">보조</span></td><td>GPT-4o mini</td><td><span class="risk-chip MINIMAL">Minimal Risk</span></td><td><span class="status-tag running">운영 중</span></td><td>이영희</td></tr>
             <tr class="clickable" onclick="showPage('monitor')" data-service="다우오피스" data-risk="Limited Risk" data-status="운영 중"><td style="color:var(--muted);font-size:11px">AI-2026-043</td><td><span class="service-tag daouoffice">다우오피스</span></td><td style="font-weight:600">문서 작성 지원</td><td><span class="tag amber">생성형</span></td><td>GPT-4o</td><td><span class="risk-chip LIMITED">Limited Risk</span></td><td><span class="status-tag running">운영 중</span></td><td>박민수</td></tr>
             <tr class="clickable" onclick="showPage('monitor')" data-service="뿌리오" data-risk="Limited Risk" data-status="운영 중"><td style="color:var(--muted);font-size:11px">AI-2026-045</td><td><span class="service-tag purrio">뿌리오</span></td><td style="font-weight:600">메시지 생성</td><td><span class="tag amber">생성형</span></td><td>GPT-4o</td><td><span class="risk-chip LIMITED">Limited Risk</span></td><td><span class="status-tag running">운영 중</span></td><td>한상욱</td></tr>
@@ -709,8 +758,8 @@
       </div>
       <div class="card">
         <div class="card-head" style="margin-bottom:12px">최근 알람</div>
-        <div class="alert-list-item"><div style="font-size:15px">⚠️</div><div><div style="font-size:12px"><b>[다우오피스] 사내 검색 Agent</b> — 응답 시간 3.1초 초과</div><div style="font-size:11px;color:var(--muted);margin-top:1px">2026.06.14 08:42 · 담당자 알림 발송</div></div></div>
-        <div class="alert-list-item"><div style="font-size:15px">✅</div><div><div style="font-size:12px"><b>[다우오피스] 사내 검색 Agent</b> — 응답 시간 정상화</div><div style="font-size:11px;color:var(--muted);margin-top:1px">2026.06.14 08:55 · 자동 복구</div></div></div>
+        <div class="alert-list-item"><div style="font-size:15px">⚠️</div><div><div style="font-size:12px"><b>[다우오피스] 문서 검색 AI</b> — 응답 시간 3.1초 초과</div><div style="font-size:11px;color:var(--muted);margin-top:1px">2026.06.14 08:42 · 담당자 알림 발송</div></div></div>
+        <div class="alert-list-item"><div style="font-size:15px">✅</div><div><div style="font-size:12px"><b>[다우오피스] 문서 검색 AI</b> — 응답 시간 정상화</div><div style="font-size:11px;color:var(--muted);margin-top:1px">2026.06.14 08:55 · 자동 복구</div></div></div>
       </div>
     </div>
 
@@ -733,7 +782,7 @@
             <tr><td style="color:var(--muted)">2026.06.11 10:07</td><td>AI-2026-047</td><td>사방넷</td><td><span class="audit-action approve">승인</span></td><td>최보안 (보안팀)</td><td style="color:var(--muted)">조건부 승인 · API 키 관리 조건</td></tr>
             <tr><td style="color:var(--muted)">2026.06.10 14:23</td><td>AI-2026-047</td><td>사방넷</td><td><span class="audit-action approve">승인</span></td><td>이정호 (서비스책임자)</td><td style="color:var(--muted)">1차 승인 완료</td></tr>
             <tr><td style="color:var(--muted)">2026.06.10 09:00</td><td>AI-2026-047</td><td>사방넷</td><td><span class="audit-action register">등록</span></td><td>박민준</td><td style="color:var(--muted)">상품설명 생성 AI 심사 신청 · Limited Risk</td></tr>
-            <tr><td style="color:var(--muted)">2026.05.30 11:20</td><td>AI-2026-043</td><td>다우오피스</td><td><span class="audit-action approve">승인</span></td><td>AI 거버넌스위원회</td><td style="color:var(--muted)">문서 작성 지원 최종 승인</td></tr>
+            <tr><td style="color:var(--muted)">2026.05.30 11:20</td><td>AI-2026-043</td><td>다우오피스</td><td><span class="audit-action approve">승인</span></td><td>AX팀 / AI 거버넌스 조직</td><td style="color:var(--muted)">문서 작성 지원 최종 승인</td></tr>
           </tbody>
         </table>
       </div>
@@ -762,16 +811,16 @@
       <div class="card">
         <div class="card-head">위험등급 자동 판정 기준 (EU AI Act 기반)</div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:4px">
-          <div style="border:2px solid #86EFAC;border-radius:8px;padding:14px"><div style="font-size:12px;font-weight:700;color:var(--low);margin-bottom:8px">Minimal Risk</div><div style="font-size:12px;color:var(--muted);line-height:1.8">• 내부 생산성 보조 기능<br>• 이메일 작성, 회의록 요약<br>• 외부 노출 없음</div></div>
+          <div style="border:2px solid #86EFAC;border-radius:8px;padding:14px"><div style="font-size:12px;font-weight:700;color:var(--low);margin-bottom:8px">Minimal Risk</div><div style="font-size:12px;color:var(--muted);line-height:1.8">• 제품 내 업무 보조 기능<br>• 이메일 작성, 회의록 요약<br>• 고객사 내부 업무용 기능</div></div>
           <div style="border:2px solid #FCD34D;border-radius:8px;padding:14px"><div style="font-size:12px;font-weight:700;color:var(--amber);margin-bottom:8px">Limited Risk</div><div style="font-size:12px;color:var(--muted);line-height:1.8">• 생성형 AI 또는 챗봇<br>• 상품설명 생성, 마케팅 문구<br>• 고객 노출 있음</div></div>
           <div style="border:2px solid #FCA5A5;border-radius:8px;padding:14px"><div style="font-size:12px;font-weight:700;color:var(--high);margin-bottom:8px">High Risk</div><div style="font-size:12px;color:var(--muted);line-height:1.8">• 인사·채용·금융·안전 관련<br>• 자동 의사결정 기능<br>• 권리·기회에 영향</div></div>
         </div>
         <div style="height:1px;background:var(--border);margin:18px 0"></div>
         <div class="card-head">승인 권한 — 3선 방어 모델</div>
         <table class="audit-table">
-          <thead><tr><th>위험등급</th><th>1선 (서비스 조직)</th><th>2선 (보안·리스크)</th><th>3선 (AI 거버넌스)</th></tr></thead>
+          <thead><tr><th>위험등급</th><th>1선 (서비스 조직)</th><th>2선 (보안·법무)</th><th>3선 (AI 거버넌스)</th></tr></thead>
           <tbody>
-            <tr><td><span class="risk-chip HIGH">High Risk</span></td><td>서비스 책임자</td><td>정보보안팀</td><td>AI 거버넌스위원회</td></tr>
+            <tr><td><span class="risk-chip HIGH">High Risk</span></td><td>서비스 책임자</td><td>정보보안팀</td><td>AX팀 / AI 거버넌스 조직</td></tr>
             <tr><td><span class="risk-chip LIMITED">Limited Risk</span></td><td>서비스 책임자</td><td>AI 거버넌스팀</td><td>—</td></tr>
             <tr><td><span class="risk-chip MINIMAL">Minimal Risk</span></td><td>AI 거버넌스팀</td><td>—</td><td>—</td></tr>
           </tbody>
@@ -798,10 +847,67 @@
       </div>
     </div>
 
+    <!-- ══════ PAGE: 보안 체크리스트 ══════ -->
+    <div id="page-checklist" class="page hidden">
+      <div class="page-header">
+        <div>
+          <div class="page-title">보안 체크리스트</div>
+          <div class="page-meta">AI-2026-047 · 사방넷 상품설명 생성 AI · 인공지능(AI) 보안 안내서 기반</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-ghost" onclick="showPage('review','047')" style="font-size:12px">← 심사로 돌아가기</button>
+          <button class="btn-primary" onclick="showToast('체크리스트 PDF 내보내기 준비 중')">내보내기</button>
+        </div>
+      </div>
+      <div class="cl-progress-wrap">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:13px;font-weight:700">전체 이행률</div>
+          <div id="cl-progress-text" style="font-size:16px;font-weight:800;color:var(--brand)">0%</div>
+        </div>
+        <div class="cl-prog-bar-bg"><div id="cl-prog-fill" class="cl-prog-bar-fill" style="width:0"></div></div>
+        <div class="cl-stats-row">
+          <div class="cl-stat-item"><div class="cl-stat-dot" style="background:#16A34A"></div><b id="cl-y-cnt" style="color:#16A34A">0</b>&nbsp;Y (이행)</div>
+          <div class="cl-stat-item"><div class="cl-stat-dot" style="background:#DC2626"></div><b id="cl-n-cnt" style="color:#DC2626">0</b>&nbsp;N (미이행)</div>
+          <div class="cl-stat-item"><div class="cl-stat-dot" style="background:#94A3B8"></div><b id="cl-na-cnt" style="color:#94A3B8">0</b>&nbsp;N/A (해당없음)</div>
+          <div class="cl-stat-item" style="margin-left:auto"><div class="cl-stat-dot" style="background:#E2E8F0"></div><b id="cl-blank-cnt" style="color:var(--muted)">0</b>&nbsp;미응답</div>
+        </div>
+      </div>
+      <div id="cl-container"></div>
+    </div>
+
   </main>
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- ══════ 반려 사유 입력 모달 ══════ -->
+<div class="modal-overlay hidden" id="rejectModal" onclick="closeRejectModalOutside(event)">
+  <div class="modal" style="width:460px">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">심사 반려</div>
+        <div class="modal-subtitle">AI-2026-047 · 사방넷 상품설명 생성 AI</div>
+      </div>
+      <span class="modal-close" onclick="closeRejectModal()">✕</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-section">반려 사유</div>
+      <div class="form-row full">
+        <div class="form-field">
+          <label>사유 입력 <span style="color:var(--high)">*</span></label>
+          <textarea id="reject-reason" placeholder="반려 사유를 구체적으로 입력하세요&#10;예: API 키 관리 방안 미제출, Prompt Injection 방어 미구현" style="min-height:90px"></textarea>
+        </div>
+      </div>
+      <div style="margin-top:10px;padding:10px 12px;background:#FEF2F2;border:1px solid #FCA5A5;border-radius:6px;font-size:11px;color:#7F1D1D;line-height:1.6">
+        ⚠️ 반려 처리 후 서비스팀에 자동 알림이 발송되며, 입력하신 사유는 감사 로그에 기록됩니다.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeRejectModal()">취소</button>
+      <button class="btn-primary" style="background:var(--high)" onclick="confirmReject()">반려 확정</button>
+    </div>
+  </div>
+</div>
 
 <!-- ══════ 새 AI 기능 등록 모달 ══════ -->
 <div class="modal-overlay hidden" id="regModal" onclick="closeRegModalOutside(event)">
@@ -844,7 +950,7 @@
       <div class="form-row">
         <div class="form-field">
           <label>AI 유형 *</label>
-          <select id="reg-type">
+          <select id="reg-type" onchange="updateRiskPreview()">
             <option value="">선택하세요</option>
             <option>생성형 AI</option>
             <option>Agent</option>
@@ -867,10 +973,11 @@
       <div class="form-row">
         <div class="form-field">
           <label>최종 사용자</label>
-          <select id="reg-user">
-            <option>외부 고객</option>
+          <select id="reg-user" onchange="updateRiskPreview()">
+            <option value="">선택하세요</option>
+            <option>고객사 직원 / 판매자</option>
             <option>내부 임직원</option>
-            <option>외부 고객 + 내부 임직원</option>
+            <option>고객사 직원 + 내부 임직원</option>
           </select>
         </div>
         <div class="form-field">
@@ -879,18 +986,27 @@
         </div>
       </div>
 
+      <!-- 위험등급 자동 판정 프리뷰 -->
+      <div id="risk-preview" class="hidden" style="margin:4px 0 14px;padding:12px 16px;background:#F8FAFC;border:1px solid var(--border);border-radius:8px;transition:all .2s">
+        <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px">⚡ 자동 판정 위험등급</div>
+        <div style="display:flex;align-items:flex-start;gap:14px">
+          <div id="rp-chip" style="flex-shrink:0;margin-top:1px"></div>
+          <div id="rp-reasons" style="font-size:11px;color:var(--muted);line-height:1.9"></div>
+        </div>
+      </div>
+
       <div class="form-section">데이터 사용 정보</div>
       <div class="form-row">
         <div class="form-field">
           <label>개인정보 포함 여부</label>
-          <select id="reg-pii">
+          <select id="reg-pii" onchange="updateRiskPreview()">
             <option>없음</option>
             <option>있음</option>
           </select>
         </div>
         <div class="form-field">
           <label>외부 API 전송 여부</label>
-          <select id="reg-external">
+          <select id="reg-external" onchange="updateRiskPreview()">
             <option>있음 (외부 LLM API)</option>
             <option>없음 (내부 처리)</option>
           </select>
@@ -905,7 +1021,192 @@
 </div>
 
 <script>
-  const VALID_PAGES = ['dashboard','registry','review','monitor','audit','compliance','policy','roles'];
+  const VALID_PAGES = ['dashboard','registry','review','monitor','audit','compliance','policy','roles','checklist'];
+
+  /* ════════════════════════════════
+     보안 체크리스트 데이터 & 로직
+  ════════════════════════════════ */
+  const CHECKLIST_DATA = [
+    { phase:'서비스 기획 및 설계', icon:'📋', id:'p1', groups:[
+      { title:'1.1 AI 보안 거버넌스 체계 구축', items:[
+        { id:'1.1.1', text:'AI 보안 거버넌스를 위한 조직이 구성되어 있는가?', owner:'AX팀', init:'Y' },
+        { id:'1.1.2', text:'AI 보안 거버넌스를 위한 정책, 절차, 프로세스가 구현되어 있는가?', owner:'AX팀', init:'Y' },
+        { id:'1.1.3', text:'AI 보안 거버넌스를 위한 전문인력을 갖추고 있는가?', owner:'AX팀', init:null },
+      ]},
+      { title:'1.2 위험관리 계획 수립', items:[
+        { id:'1.2.1', text:'AI 서비스 생명주기 과정에서 나타날 수 있는 위험요소를 분석·도출하고 있는가?', owner:'AX팀', init:null },
+        { id:'1.2.2', text:'AI 서비스에 대한 위협 모델링 및 위험 평가를 수행하고 있는가?', owner:'보안팀', init:'Y' },
+        { id:'1.2.3', text:'AI 서비스에 대한 위험요소를 제거·완화하기 위한 방안을 마련하고 있는가?', owner:'보안팀', init:null },
+      ]},
+      { title:'1.3 서비스 수준 계약(SLA) 관리', items:[
+        { id:'1.3.1', text:'공급업체(LLM API)와 계약 시 SLA에 보안 요구사항을 명확히 포함했는가?', owner:'법무팀', init:'N' },
+        { id:'1.3.2', text:'보안 침해 발생 시를 대비하여 대응 계획을 수립하고 있는가?', owner:'보안팀', init:null },
+        { id:'1.3.3', text:'보안 침해 발생 시를 대비하여 책임 소재를 명확히 하고 있는가?', owner:'법무팀', init:null },
+      ]},
+    ]},
+    { phase:'서비스 개발 및 구축', icon:'🔧', id:'p2', groups:[
+      { title:'2.1 코드 취약점 점검', items:[
+        { id:'2.1.1', text:'정적/동적 코드 분석 도구를 사용하여 소스 코드의 보안 취약점을 분석하고 있는가?', owner:'보안팀', init:null },
+        { id:'2.1.2', text:'코드 리뷰 프로세스를 도입하여 보안 문제를 검토하고 개선하고 있는가?', owner:'서비스팀', init:null },
+      ]},
+      { title:'2.3 데이터 보안', items:[
+        { id:'2.3.3', text:'중요 데이터에 대한 기밀성 유지를 위해 보호 방안을 마련하고 있는가?', owner:'보안팀', init:'Y' },
+        { id:'2.3.4', text:'전송 구간에서 중요 정보 유출을 방지하기 위한 보호 방안을 마련하고 있는가?', owner:'보안팀', init:null },
+        { id:'2.3.5', text:'데이터 유출 시 책임추적을 할 수 있도록 조치를 하고 있는가?', owner:'보안팀', init:null },
+      ]},
+      { title:'2.4 API 및 인터페이스 보안', items:[
+        { id:'2.4.1', text:'API 통신을 암호화하여 데이터 전송 구간에서 외부 공격에 대한 방어를 하고 있는가?', owner:'보안팀', init:'Y' },
+        { id:'2.4.2', text:'모든 API 요청에 대해 인증 및 권한 관리를 강화하고, 강한 인증 메커니즘을 적용하고 있는가?', owner:'보안팀', init:null },
+        { id:'2.4.4', text:'API 호출 제한(Rate Limiting)을 설정하여 과도한 요청을 방지하고 있는가?', owner:'서비스팀', init:'N' },
+      ]},
+    ]},
+    { phase:'LLM 보안', icon:'🤖', id:'p3', groups:[
+      { title:'3.4 LLM 특화 보안', items:[
+        { id:'3.4.1', text:'LLM 애플리케이션 공격(탈옥, 데이터 추출 등)에 대한 예방책을 마련하고 있는가?', owner:'보안팀', init:null },
+        { id:'3.4.3', text:'LLM의 API 보안을 위한 방안(키 관리, 접근 제어)을 수립하고 있는가?', owner:'보안팀', init:'N' },
+        { id:'3.4.6', text:'LLM 출력 결과를 정기적으로 모니터링하고 검토하고 있는가?', owner:'AX팀', init:null },
+        { id:'3.4.7', text:'LLM의 Prompt Injection 공격에 대한 방어 방안을 수립하고 있는가?', owner:'서비스팀', init:'N' },
+        { id:'3.4.8', text:'LLM의 벡터 및 임베딩 취약점에 대한 방어 방안을 수립하고 있는가?', owner:'보안팀', init:'NA' },
+      ]},
+    ]},
+    { phase:'서비스 운영 및 모니터링', icon:'📡', id:'p4', groups:[
+      { title:'4.1 모니터링 및 업데이트', items:[
+        { id:'4.1.1', text:'지속적인 사용자 경험 모니터링을 위해 사용자 로그를 수집·관리하고 있는가?', owner:'서비스팀', init:'Y' },
+        { id:'4.1.2', text:'AI 시스템에 예기치 못한 오류 발생 시 조기 탐지 및 대응 메커니즘이 있는가?', owner:'서비스팀', init:null },
+        { id:'4.1.3', text:'AI 시스템의 보안 패치나 모델 업데이트가 정기적으로 이루어지고 있는가?', owner:'보안팀', init:null },
+      ]},
+      { title:'4.2 성능 및 장애 관리', items:[
+        { id:'4.2.1', text:'서비스 장애 발생 시 자동으로 복구할 수 있도록 하고 있는가?', owner:'서비스팀', init:null },
+        { id:'4.2.2', text:'모델 성능을 지속적으로 모니터링하고, 성능 저하 시 대응 체계가 있는가?', owner:'서비스팀', init:null },
+      ]},
+    ]},
+    { phase:'Feedback 및 개선', icon:'🔄', id:'p5', groups:[
+      { title:'5.1 사용자 피드백 관리', items:[
+        { id:'5.1.1', text:'사용자 피드백 시스템에 입력 검증 및 필터링을 적용하여 악성 데이터 입력을 차단하고 있는가?', owner:'서비스팀', init:null },
+        { id:'5.1.4', text:'피드백 처리 과정에서 이루어진 모든 접근·변경 사항을 감사 로그로 기록하고 있는가?', owner:'AX팀', init:'Y' },
+      ]},
+    ]},
+  ];
+
+  const CL_STATUS = {};
+
+  function initChecklist() {
+    CHECKLIST_DATA.forEach(p => p.groups.forEach(g => g.items.forEach(item => {
+      CL_STATUS[item.id] = item.init || null;
+    })));
+    renderChecklist();
+    updateClProgress();
+  }
+
+  function ownerClass(owner) {
+    return owner === 'AX팀' ? 'ax' : owner === '보안팀' ? 'security' : owner === '법무팀' ? 'legal' : 'service';
+  }
+
+  function phaseStats(phase) {
+    const items = phase.groups.flatMap(g => g.items);
+    const done  = items.filter(i => CL_STATUS[i.id] === 'Y' || CL_STATUS[i.id] === 'NA').length;
+    const nCount = items.filter(i => CL_STATUS[i.id] === 'N').length;
+    return { total: items.length, done, nCount };
+  }
+
+  function renderChecklist() {
+    const container = document.getElementById('cl-container');
+    container.innerHTML = '';
+    CHECKLIST_DATA.forEach(phase => {
+      const { total, done, nCount } = phaseStats(phase);
+      const phaseDiv = document.createElement('div');
+      phaseDiv.className = 'cl-phase';
+
+      const nBadgeHtml = nCount > 0
+        ? `<span class="n-badge">N ${nCount}건</span>` : '';
+
+      let bodyHtml = '';
+      phase.groups.forEach(group => {
+        bodyHtml += `<div class="cl-group-title">${group.title}</div>`;
+        group.items.forEach(item => {
+          const s = CL_STATUS[item.id];
+          const stClass = s === 'Y' ? 'st-y' : s === 'N' ? 'st-n' : s === 'NA' ? 'st-na' : '';
+          bodyHtml += `
+            <div class="cl-item ${stClass}" id="clitem-${item.id}">
+              <span class="cl-item-id">${item.id}</span>
+              <span class="cl-item-text">${item.text}</span>
+              <span class="cl-item-owner"><span class="owner-tag ${ownerClass(item.owner)}">${item.owner}</span></span>
+              <div class="cl-item-btns">
+                <button class="cl-btn ${s==='Y'?'active-y':''}" onclick="setClStatus('${item.id}','Y','${phase.id}')">Y</button>
+                <button class="cl-btn ${s==='N'?'active-n':''}" onclick="setClStatus('${item.id}','N','${phase.id}')">N</button>
+                <button class="cl-btn ${s==='NA'?'active-na':''}" onclick="setClStatus('${item.id}','NA','${phase.id}')">N/A</button>
+              </div>
+            </div>`;
+        });
+      });
+
+      phaseDiv.innerHTML = `
+        <div class="cl-phase-header" onclick="togglePhase('${phase.id}')">
+          <span class="cl-phase-icon">${phase.icon}</span>
+          <span class="cl-phase-title">${phase.phase}</span>
+          ${nBadgeHtml}
+          <span class="cl-phase-stats" id="pstat-${phase.id}">${done}/${total} 완료</span>
+          <span class="cl-phase-chevron">▼</span>
+        </div>
+        <div class="cl-phase-body" id="body-${phase.id}">${bodyHtml}</div>`;
+      container.appendChild(phaseDiv);
+    });
+    // 첫 번째 섹션 열기
+    togglePhase('p1', true);
+  }
+
+  function togglePhase(id, forceOpen) {
+    const body   = document.getElementById('body-' + id);
+    const header = body.previousElementSibling;
+    const isOpen = body.classList.contains('open');
+    if (forceOpen || !isOpen) {
+      body.classList.add('open'); header.classList.add('open');
+    } else {
+      body.classList.remove('open'); header.classList.remove('open');
+    }
+  }
+
+  function setClStatus(itemId, status, phaseId) {
+    CL_STATUS[itemId] = CL_STATUS[itemId] === status ? null : status;
+    const s = CL_STATUS[itemId];
+    const itemEl = document.getElementById('clitem-' + itemId);
+    const btns = itemEl.querySelectorAll('.cl-btn');
+    btns[0].className = 'cl-btn' + (s === 'Y'  ? ' active-y'  : '');
+    btns[1].className = 'cl-btn' + (s === 'N'  ? ' active-n'  : '');
+    btns[2].className = 'cl-btn' + (s === 'NA' ? ' active-na' : '');
+    itemEl.className  = 'cl-item' + (s === 'Y' ? ' st-y' : s === 'N' ? ' st-n' : s === 'NA' ? ' st-na' : '');
+
+    // 단계 헤더 통계 갱신
+    const phase = CHECKLIST_DATA.find(p => p.id === phaseId);
+    const { total, done, nCount } = phaseStats(phase);
+    document.getElementById('pstat-' + phaseId).textContent = `${done}/${total} 완료`;
+    const header = document.getElementById('body-' + phaseId).previousElementSibling;
+    let nb = header.querySelector('.n-badge');
+    if (nCount > 0) {
+      if (!nb) { nb = document.createElement('span'); nb.className = 'n-badge'; header.querySelector('.cl-phase-stats').before(nb); }
+      nb.textContent = 'N ' + nCount + '건';
+    } else if (nb) { nb.remove(); }
+
+    updateClProgress();
+  }
+
+  function updateClProgress() {
+    const ids   = Object.keys(CL_STATUS);
+    const total = ids.length;
+    const yN    = ids.filter(id => CL_STATUS[id] === 'Y').length;
+    const nN    = ids.filter(id => CL_STATUS[id] === 'N').length;
+    const naN   = ids.filter(id => CL_STATUS[id] === 'NA').length;
+    const blank = total - yN - nN - naN;
+    const pct   = Math.round((yN + naN) / total * 100);
+    document.getElementById('cl-progress-text').textContent = pct + '%';
+    document.getElementById('cl-prog-fill').style.width = pct + '%';
+    document.getElementById('cl-y-cnt').textContent  = yN;
+    document.getElementById('cl-n-cnt').textContent  = nN;
+    document.getElementById('cl-na-cnt').textContent = naN;
+    document.getElementById('cl-blank-cnt').textContent = blank;
+  }
+
+  let ctrlCardOriginal = null;
 
   function resetReviewPage() {
     const sc = document.getElementById('summaryCard');
@@ -922,8 +1223,47 @@
     document.getElementById('monitorLink').classList.remove('visible');
     ['approveBtn','rejectBtn'].forEach(id => {
       const el = document.getElementById(id);
-      if (el) el.disabled = false;
+      if (el) { el.disabled = false; }
     });
+    document.getElementById('approveBtn').textContent = '조건부 승인';
+    const kpi = document.getElementById('kpi-ctrl-count');
+    kpi.textContent = '4건'; kpi.className = 'summary-kpi-val red';
+    if (ctrlCardOriginal) {
+      document.getElementById('ctrl-hero-card').innerHTML = ctrlCardOriginal;
+    }
+  }
+
+  function toggleCtrl(badge) {
+    badge.classList.remove('needed', 'pending', 'ctrl-toggle');
+    badge.classList.add('done');
+    badge.textContent = '구현 완료';
+    badge.onclick = null;
+    badge.style.cursor = 'default';
+    badge.title = '';
+    updateCtrlCount();
+  }
+
+  function updateCtrlCount() {
+    const remaining = document.querySelectorAll('#ctrl-hero-card .ctrl-toggle').length;
+    const kpi = document.getElementById('kpi-ctrl-count');
+    kpi.textContent = remaining + '건';
+
+    if (remaining === 0) {
+      kpi.className = 'summary-kpi-val green';
+      const sc = document.getElementById('summaryCard');
+      sc.style.borderLeftColor = '#16A34A';
+      sc.style.background = '#F0FDF4';
+      sc.style.borderColor = '#86EFAC';
+      document.querySelector('.summary-verdict-label').style.color = '#14532D';
+      document.getElementById('summaryVerdict').textContent = '통제 이행 완료 — 운영 전환 가능';
+      document.getElementById('summaryVerdict').style.color = '#15803D';
+      document.getElementById('summarySub').textContent = '모든 필수 통제 항목 이행 완료 · 최종 운영 전환 가능합니다';
+      document.getElementById('summarySub').style.color = '#16A34A';
+      const btn = document.getElementById('approveBtn');
+      btn.textContent = '최종 운영 전환';
+      btn.style.background = '#16A34A';
+      showToast('✅  필수 통제 4건 이행 완료 — 최종 운영 전환 가능합니다.');
+    }
   }
 
   function showPage(id, fromRowId) {
@@ -934,6 +1274,9 @@
     const target = document.querySelector(`[data-page="${id}"]`);
     if (target) target.classList.add('active');
     history.replaceState(null, '', '#' + id);
+    if (id === 'checklist' && !document.getElementById('cl-container').hasChildNodes()) {
+      initChecklist();
+    }
     if (id === 'dashboard') {
       setTimeout(() => {
         document.querySelectorAll('#page-dashboard .service-bar-fill').forEach(bar => {
@@ -952,6 +1295,24 @@
   }
 
   function rejectReview() {
+    document.getElementById('reject-reason').value = '';
+    document.getElementById('rejectModal').classList.remove('hidden');
+    setTimeout(() => document.getElementById('reject-reason').focus(), 100);
+  }
+
+  function closeRejectModal() {
+    document.getElementById('rejectModal').classList.add('hidden');
+  }
+
+  function closeRejectModalOutside(e) {
+    if (e.target === document.getElementById('rejectModal')) closeRejectModal();
+  }
+
+  function confirmReject() {
+    const reason = document.getElementById('reject-reason').value.trim();
+    if (!reason) { showToast('⚠️  반려 사유를 입력해 주세요.'); return; }
+    closeRejectModal();
+
     const chip = document.getElementById('reviewStatusChip');
     chip.className = 'status-chip';
     chip.style.background = '#FEF2F2';
@@ -973,21 +1334,22 @@
       if (el) el.disabled = true;
     });
     syncRegistryRow('rejected', '반려');
-    showToast('✕  AI-2026-047 심사 반려 — 보완 후 재신청이 필요합니다.');
+    addAuditEntry('반려', 'reject', '김현진 (AX팀)', reason);
+    showToast('✕  AI-2026-047 심사 반려 — 서비스팀에 알림이 발송되었습니다.');
   }
 
   function completeApproval() {
     document.getElementById('finalApprovalStatus').innerHTML =
-      '<div><div class="ap-result-text pass">✓ 최종 승인</div><div class="ap-result-time">방금 전</div></div>';
+      '<div><div class="ap-result-text pass">✓ 조건부 승인</div><div class="ap-result-time">방금 전</div></div>';
     const chip = document.getElementById('reviewStatusChip');
     chip.className = 'status-chip approved';
-    chip.textContent = '승인 완료';
+    chip.textContent = '조건부 승인';
     const sc = document.getElementById('summaryCard');
     sc.style.borderLeftColor = '#16A34A';
     sc.style.background = '#F0FDF4';
     sc.style.borderColor = '#86EFAC';
     document.querySelector('.summary-verdict-label').style.color = '#14532D';
-    document.getElementById('summaryVerdict').textContent = '최종 승인 완료';
+    document.getElementById('summaryVerdict').textContent = '조건부 승인 완료';
     document.getElementById('summaryVerdict').style.color = '#15803D';
     document.getElementById('summarySub').textContent = '배포 가능 상태로 전환되었습니다.';
     document.getElementById('summarySub').style.color = '#16A34A';
@@ -997,7 +1359,68 @@
     });
     document.getElementById('monitorLink').classList.add('visible');
     syncRegistryRow('approved', '배포 가능');
-    showToast('✅  AI-2026-047 최종 승인 완료 — 배포 가능 상태로 전환되었습니다.');
+    addAuditEntry('조건부 승인', 'approve', '김현진 (AX팀)', '조건부 승인 — 미완료 통제 이행 후 운영 전환');
+    showToast('✅  AI-2026-047 조건부 승인 완료 — 미완료 통제 이행 후 운영 전환됩니다.');
+  }
+
+  function updateRiskPreview() {
+    const type     = document.getElementById('reg-type').value;
+    const user     = document.getElementById('reg-user').value;
+    const external = document.getElementById('reg-external').value;
+    const pii      = document.getElementById('reg-pii').value;
+    const preview  = document.getElementById('risk-preview');
+
+    if (!type) { preview.classList.add('hidden'); return; }
+    preview.classList.remove('hidden');
+
+    let risk, chipClass, reasons = [];
+
+    if (type === 'Agent') {
+      risk = 'High Risk'; chipClass = 'HIGH';
+      reasons = ['Agent 유형 — 자율적 판단 및 액션 수행', '외부 시스템 연동 가능성', '오작동 시 영향 범위 넓음'];
+    } else if (type === '생성형 AI') {
+      const isExternal = !user || user.includes('고객사');
+      risk = 'Limited Risk'; chipClass = 'LIMITED';
+      reasons = ['생성형 AI — AI 콘텐츠 고지 의무 적용'];
+      if (isExternal) reasons.push('고객사 사용자에게 결과 직접 노출');
+      else { risk = 'Minimal Risk'; chipClass = 'MINIMAL'; reasons = ['내부 임직원 대상 생성형 AI 보조 기능']; }
+    } else {
+      risk = 'Minimal Risk'; chipClass = 'MINIMAL';
+      reasons = ['분류·추천 보조 기능 — 자동 의사결정 아님'];
+      if (user && user.includes('고객사')) {
+        risk = 'Limited Risk'; chipClass = 'LIMITED';
+        reasons.push('고객사 사용자 대상 — 결과 영향도 검토 필요');
+      }
+    }
+
+    if (pii === '있음') reasons.push('⚠ 개인정보 포함 — 개인정보보호법 검토 필수');
+    if (external === '있음 (외부 LLM API)') reasons.push('⚠ 외부 LLM API 전송 — 보안·계약 검토 필요');
+
+    const bgMap  = { HIGH: '#FEF2F2', LIMITED: '#FFFBEB', MINIMAL: '#F0FDF4' };
+    const brdMap = { HIGH: '#FCA5A5', LIMITED: '#FCD34D', MINIMAL: '#86EFAC' };
+    preview.style.background   = bgMap[chipClass];
+    preview.style.borderColor  = brdMap[chipClass];
+
+    document.getElementById('rp-chip').innerHTML =
+      `<span class="risk-chip ${chipClass}" style="font-size:13px;padding:4px 12px">${risk}</span>`;
+    document.getElementById('rp-reasons').innerHTML =
+      reasons.map(r => `<div>• ${r}</div>`).join('');
+  }
+
+  function addAuditEntry(action, actionClass, actor, note) {
+    const now = new Date();
+    const pad = n => String(n).padStart(2,'0');
+    const dateStr = `${now.getFullYear()}.${pad(now.getMonth()+1)}.${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    const tbody = document.querySelector('.audit-table tbody');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="color:var(--muted)">${dateStr}</td>
+      <td>AI-2026-047</td>
+      <td>사방넷</td>
+      <td><span class="audit-action ${actionClass}">${action}</span></td>
+      <td>${actor}</td>
+      <td style="color:var(--muted)">${note}</td>`;
+    tbody.insertBefore(tr, tbody.firstChild);
   }
 
   function filterRegistry() {
@@ -1017,6 +1440,9 @@
   }
   function closeRegModal() {
     document.getElementById('regModal').classList.add('hidden');
+    document.getElementById('risk-preview').classList.add('hidden');
+    document.getElementById('reg-type').value = '';
+    document.getElementById('reg-user').value = '';
   }
   function closeRegModalOutside(e) {
     if (e.target === document.getElementById('regModal')) closeRegModal();
@@ -1036,7 +1462,13 @@
       return;
     }
 
-    const riskMap  = { '생성형 AI': 'Limited Risk', 'Agent': 'High Risk', '보조 (분류/추천)': 'Minimal Risk' };
+    const user      = document.getElementById('reg-user').value;
+    const isInternal = user === '내부 임직원';
+    const riskMap  = {
+      'Agent': 'High Risk',
+      '생성형 AI': isInternal ? 'Minimal Risk' : 'Limited Risk',
+      '보조 (분류/추천)': (!user || isInternal) ? 'Minimal Risk' : 'Limited Risk'
+    };
     const risk     = riskMap[type] || 'Limited Risk';
     const chipClass = risk === 'High Risk' ? 'HIGH' : risk === 'Limited Risk' ? 'LIMITED' : 'MINIMAL';
     const svcClass  = service === '다우오피스' || service === '다우오피스HR' ? 'daouoffice'
@@ -1082,6 +1514,9 @@
     t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 3500);
   }
+
+  // 통제 항목 원본 저장 (리셋용)
+  ctrlCardOriginal = document.getElementById('ctrl-hero-card').innerHTML;
 
   // 새로고침 시 마지막 페이지 복원
   const initHash = location.hash.slice(1);
