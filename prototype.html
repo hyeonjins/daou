@@ -367,7 +367,7 @@
           </div>
         </div>
         <div class="rv-actions">
-          <button class="btn-ghost" id="rejectBtn" onclick="showToast('심사가 반려 처리되었습니다.')">반려</button>
+          <button class="btn-ghost" id="rejectBtn" onclick="rejectReview()">반려</button>
           <button class="btn-primary" id="approveBtn" onclick="completeApproval()">최종 승인</button>
         </div>
       </div>
@@ -916,6 +916,30 @@
         });
       }, 100);
     }
+  }
+
+  function rejectReview() {
+    const chip = document.getElementById('reviewStatusChip');
+    chip.className = 'status-chip';
+    chip.style.background = '#FEF2F2';
+    chip.style.color = '#DC2626';
+    chip.textContent = '반려';
+    const sc = document.getElementById('summaryCard');
+    sc.style.borderLeftColor = '#DC2626';
+    sc.style.background = '#FEF2F2';
+    sc.style.borderColor = '#FCA5A5';
+    document.querySelector('.summary-verdict-label').style.color = '#7F1D1D';
+    document.getElementById('summaryVerdict').textContent = '심사 반려';
+    document.getElementById('summaryVerdict').style.color = '#DC2626';
+    document.getElementById('summarySub').textContent = '보완 후 재신청이 필요합니다.';
+    document.getElementById('summarySub').style.color = '#DC2626';
+    document.getElementById('finalApprovalStatus').innerHTML =
+      '<div><div class="ap-result-text" style="color:#DC2626">✕ 반려</div><div class="ap-result-time">방금 전</div></div>';
+    ['approveBtn','rejectBtn'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.disabled = true;
+    });
+    showToast('✕  AI-2026-047 심사 반려 — 보완 후 재신청이 필요합니다.');
   }
 
   function completeApproval() {
